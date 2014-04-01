@@ -1,4 +1,5 @@
 import sqlite3
+import random
 
 
 class Animal():
@@ -55,7 +56,11 @@ class Animal():
         return self.food_weight_ratio * self.weight
 
     def chance(self):
-        pass
+        chance_to_live = (self.age / self.life_expectancy) * 100
+        random_number = random.uniform(0, 100)
+        if random_number <= chance_to_live:
+            self.status = False
+        self.status = True
 
 #new_animal = Animal('lion', 2, 'gosho', 'male', 10)
 #new_animal.all_database_by_speaceis('lion')
