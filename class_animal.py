@@ -62,5 +62,8 @@ class Animal():
             self.status = False
         self.status = True
 
+    def get_status(self):
+        return self.status
+
 #new_animal = Animal('lion', 2, 'gosho', 'male', 10)
 #new_animal.all_database_by_speaceis('lion')
