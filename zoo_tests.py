@@ -25,6 +25,9 @@ class ZooTests(unittest.TestCase):
     def test_zoo_income(self):
         self.assertEqual(180, self.zoo.daily_income())
 
+    #def test_accomodate(self):
+    #    self.zoo.accomodate()
+
 
 if __name__ == '__main__':
     unittest.main()
