@@ -1,13 +1,18 @@
 import unittest
 from zoo import Zoo
+from class_animal import Animal
 
 
 class ZooTests(unittest.TestCase):
     def setUp(self):
-        self.zoo = Zoo(['tiger', 'lion', 'hippo'], 1000, 100000, 'Zoo')
+        self.tiger = Animal('tiger', 2, 'Pesho', 'male', 100)
+        self.lion = Animal('lion', 5, 'Gosho', 'female', 120)
+        self.goat = Animal('goat', 3, 'Kolio', 'male', 80)
+        self.zoo = Zoo([self.tiger, self.lion, self.goat], 1000, 100000, 'Zoo')
 
     def test_zoo_get_animals(self):
-        self.assertEqual(['tiger', 'lion', 'hippo'], self.zoo.get_animals())
+        self.assertEqual([self.tiger, self.lion, self.goat],
+                         self.zoo.get_animals())
 
     def test_zoo_get_capacity(self):
         self.assertEqual(1000, self.zoo.get_capacity())
@@ -25,8 +30,13 @@ class ZooTests(unittest.TestCase):
     def test_zoo_income(self):
         self.assertEqual(180, self.zoo.daily_income())
 
-    #def test_accomodate(self):
-    #    self.zoo.accomodate()
+    def test_accomodate(self):
+        self.zoo.accomodate(self.tiger)
+        self.zoo.accomodate(self.lion)
+        self.zoo.accomodate(self.goat)
+
+    def test_daily_outcome(self):
+        self.assertEqual(101, self.zoo.daily_outcome())
 
 
 if __name__ == '__main__':
