@@ -31,7 +31,7 @@ class Animal():
         return self.species
 
     def get_age(self):
-        return self.age
+        return self.age * 365
 
     def get_name(self):
         return self.name
@@ -44,26 +44,26 @@ class Animal():
 
     def grow_animal(self, period_of_time):
         if self.age < self.life_expectancy:
+            animal_age = self.get_age()
             if self.weight < self.average_weight:
                 self.weight += self.weight_age_ratio
-                self.age += period_of_time
+                animal_age += period_of_time
+                return (animal_age, self.weight)
             else:
-                self.age += period_of_time
+                animal_age += period_of_time
+                return animal_age
         else:
-            self.status = False
+            return not self.status
 
     def eat(self):
         return self.food_weight_ratio * self.weight
 
-    def chance(self):
+    def chance(self, age):
         chance_to_live = (self.age / self.life_expectancy) * 100
         random_number = random.uniform(0, 100)
         if random_number <= chance_to_live:
-            self.status = False
-        self.status = True
+            return not self.status
+        return self.status
 
     def get_status(self):
         return self.status
-
-#new_animal = Animal('lion', 2, 'gosho', 'male', 10)
-#new_animal.all_database_by_speaceis('lion')
