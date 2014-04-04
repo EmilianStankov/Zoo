@@ -1,5 +1,4 @@
 import sqlite3
-from class_animal import Animal
 
 
 class Zoo():
@@ -25,9 +24,10 @@ class Zoo():
         db = sqlite3.connect("animals.db")
         cursor = db.cursor()
         cursor.execute("""CREATE TABLE IF NOT EXISTS zoos
-                          (id INTEGER PRIMARY KEY AUTOINCREMENT, name)""")
-        query = ("INSERT INTO zoos(name) VALUES(?)")
-        data = [self.get_name()]
+                          (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                           name, budget)""")
+        query = ("INSERT INTO zoos(name, budget) VALUES(?, ?)")
+        data = [self.get_name(), self.get_budget()]
         cursor.execute(query, data)
         db.commit()
         db.close()
@@ -47,15 +47,16 @@ class Zoo():
         for line in cursor.execute(query, data):
             zoo_id = line[0]
         cursor.execute("""CREATE TABLE IF NOT EXISTS animals_in_zoo
-                          (zoo_id, species, name, status, gender,
+                          (zoo_id, species, name, status, gender, weight, age,
                            unique_animal_id INTEGER PRIMARY KEY AUTOINCREMENT)
                        """)
-        query = ("""INSERT INTO animals_in_zoo(zoo_id, species,
-                                               name, status, gender)
-                    VALUES(?, ?, ?, ?, ?)""")
+        query = ("""INSERT INTO animals_in_zoo(zoo_id, species,name, status,
+                                               gender, weight, age)
+                    VALUES(?, ?, ?, ?, ?, ?, ?)""")
         data = [zoo_id, self._animal.get_species(),
                 self._animal.get_name(), self._animal.get_status(),
-                self._animal.get_gender()]
+                self._animal.get_gender(), self._animal.get_weight(),
+                self._animal.get_age()]
         cursor.execute(query, data)
         db.commit()
         db.close()
@@ -80,7 +81,37 @@ class Zoo():
 
         return int(__outcome)
 
-
-lion = Animal('lion', 2, 'Pesho', 'male', 100)
-zoo = Zoo([lion], 10, 1000, 'Zoo')
-zoo.daily_outcome()
+    def simulate_time(self, interval, period):
+        db = sqlite3.connect("animals.db")
+        cursor = db.cursor()
+        query = ("SELECT id FROM zoos WHERE name = ?")
+        data = [self.get_name()]
+        for line in cursor.execute(query, data):
+            __zoo_id = line[0]
+        if interval == 'days':
+            __period = period
+        elif interval == 'weeks':
+            __period = period * 7
+        elif interval == 'months':
+            __period = period * 30
+        elif interval == 'years':
+            __period = period * 365
+        for i in range(__period):
+            self._budget += self.daily_income()
+            self._budget -= self.daily_outcome()
+        query = ("UPDATE zoos SET budget = ?")
+        data = [self.get_budget()]
+        cursor.execute(query, data)
+        db.commit()
+        for animal in self._animals:
+            __species = animal.get_species()
+            animal.grow_animal(__period / 365)
+            animal.weight += animal.eat()
+            query = ("""UPDATE animals_in_zoo
+                        SET age = ?, weight = ?, status = ?
+                        WHERE zoo_id = ? AND species = ?""")
+            data = [animal.get_age(), animal.get_weight(), animal.get_status(),
+                    __zoo_id, __species]
+            cursor.execute(query, data)
+            db.commit()
+        db.close()
