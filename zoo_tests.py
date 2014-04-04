@@ -38,6 +38,10 @@ class ZooTests(unittest.TestCase):
     def test_daily_outcome(self):
         self.assertEqual(101, self.zoo.daily_outcome())
 
+    def test_simulate_period_of_time(self):
+        self.zoo.simulate_time('months', 10)
+        self.assertEqual(123700, self.zoo.get_budget())
+
 
 if __name__ == '__main__':
     unittest.main()

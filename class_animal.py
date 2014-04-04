@@ -13,8 +13,9 @@ class Animal():
         self.conn = sqlite3.connect("animals.db")
         self.animal = self.conn.cursor()
         self.status = True
+        self.all_database_by_species(self.species)
 
-    def all_database_by_speaceis(self, species):
+    def all_database_by_species(self, species):
         query_animals = ("SELECT * FROM animals WHERE species=?")
         data_animals = [self.species]
         row = self.animal.execute(query_animals, data_animals)
