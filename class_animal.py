@@ -46,10 +46,10 @@ class Animal():
     def grow_animal(self, period_of_time):
         if self.age < self.life_expectancy:
             if self.weight < self.average_weight:
-                self.weight += self.weight_age_ratio
-                self.age += period_of_time
+                self.weight += self.weight_age_ratio * period_of_time
+                self.age += period_of_time / 12
             else:
-                self.age += period_of_time
+                self.age += period_of_time / 12
         else:
             self.status = False
 
